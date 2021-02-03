@@ -102,3 +102,20 @@ dist
 
 # TernJS port file
 .tern-port
+
+# macos
+.DS_Store
+
+#vue
+/dist
+.env.local
+.env.*.local
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
