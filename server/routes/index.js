@@ -3,7 +3,10 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: '首页' });
+  res.json({
+  	success: true,
+  	data:[1,2,3]
+  })
 });
 
 module.exports = router;

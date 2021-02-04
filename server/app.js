@@ -35,34 +35,44 @@ app.use(function(req, res, next) {
 
 // development模式错误处理
 if (app.get('env') === 'development') {
-	console.log(app.get('env'))
+    console.log(app.get('env'))
     app.use(function(err, req, res, next) {
         res.locals.message = err.message;
         res.locals.error = err;
 
         // render the error page
         res.status(err.status || 500);
-        res.render('error', {
-            title: err.status || 500,
-            message: err.message,
-            error: err
-        });
+        // res.render('error', {
+        //     title: err.status || 500,
+        //     message: err.message,
+        //     error: err
+        // });
+        res.json({
+            success: false,
+            status: err.status || 500,
+            msg: err.message
+        })
     });
 }
 
 // production模式错误处理
 app.use(function(err, req, res, next) {
-	console.log(app.get('env'))
+    console.log(app.get('env'))
     res.locals.message = err.message;
     res.locals.error = {};
 
     // render the error page
     res.status(err.status || 500);
-    res.render('error', {
-        title: err.status || 500,
-        message: err.message,
-        error: ""
-    });
+    // res.render('error', {
+    //     title: err.status || 500,
+    //     message: err.message,
+    //     error: ""
+    // });
+    res.json({
+        success: false,
+        status: err.status || 500,
+        msg: err.message
+    })
 
 });
 
