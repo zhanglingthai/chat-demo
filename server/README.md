@@ -1,3 +1,19 @@
-# express-demo-withpublic
+server:
 
-不带公共文件的express架包
+用户注册
+gmail,line,微信,QQ,账号密码
+
+用户登陆
+gmail,line,微信,QQ,账号密码
+
+用户信息展示
+
+聊天服务
+即时消息，历史消息，群聊天,群历史
+
+公共信息
+在线人数，公告
+
+设置服务
+密码修改,用户信息修改
+
