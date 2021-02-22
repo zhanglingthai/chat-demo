@@ -85,13 +85,27 @@ app.use(function(req, res, next) {
 // development模式错误处理
 console.log(app.get('env')) //mode
 if (app.get('env') === 'development') {
+<<<<<<< HEAD
+=======
+    console.log(app.get('env'))
+>>>>>>> 2a714d9115a21ae0c66499420a5f09600744e3b9
     app.use(function(err, req, res, next) {
         // console.log('错误处理中间件1')
         res.locals.message = err.message;
         res.locals.error = err;
 
         // render the error page
+<<<<<<< HEAD
         res.status(err.status || 500).json({
+=======
+        res.status(err.status || 500);
+        // res.render('error', {
+        //     title: err.status || 500,
+        //     message: err.message,
+        //     error: err
+        // });
+        res.json({
+>>>>>>> 2a714d9115a21ae0c66499420a5f09600744e3b9
             success: false,
             status: err.status || 500,
             msg: err.message
@@ -101,16 +115,34 @@ if (app.get('env') === 'development') {
 
 // production模式错误处理
 app.use(function(err, req, res, next) {
+<<<<<<< HEAD
     // console.log('错误处理中间件2')
+=======
+    console.log(app.get('env'))
+>>>>>>> 2a714d9115a21ae0c66499420a5f09600744e3b9
     res.locals.message = err.message;
     res.locals.error = {};
 
     // render the error page
+<<<<<<< HEAD
     res.status(err.status || 500).json({
         success: false,
         status: err.status || 500,
         msg: err.message
     });
+=======
+    res.status(err.status || 500);
+    // res.render('error', {
+    //     title: err.status || 500,
+    //     message: err.message,
+    //     error: ""
+    // });
+    res.json({
+        success: false,
+        status: err.status || 500,
+        msg: err.message
+    })
+>>>>>>> 2a714d9115a21ae0c66499420a5f09600744e3b9
 
 });
 
