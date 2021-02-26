@@ -1,6 +1,6 @@
-var mysql = require('mysql')
-var conf = require('../conf/mysql')
-var pool = mysql.createPool(conf);
+const mysql = require('mysql');
+const conf = require('../conf').mysql;
+const pool = mysql.createPool(conf);
 
 
 //需要保证在同连接做一系列操作时用getConnection,query方法会随机使用一条连接

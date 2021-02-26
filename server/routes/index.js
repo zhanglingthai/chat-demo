@@ -4,16 +4,27 @@ var router = express.Router();
 const redisClient = require('../clients/redis')
 const mysqlClient = require('../clients/mysql')
 
-<<<<<<< HEAD
-=======
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json({
-  	success: true,
-  	data:[1,2,3]
-  })
+router.get('/reg', function(req, res, next) {
+    let arr = [];
+    for (let i = 0; i < 100; i++) {
+        arr.push(i)
+    }
+    res.json({
+        success: true,
+        data: arr
+    })
 });
->>>>>>> 2a714d9115a21ae0c66499420a5f09600744e3b9
+
+router.get('/login', function(req, res, next) {
+    let arr = [];
+    for (let i = 0; i < 100; i++) {
+        arr.push(i)
+    }
+    res.json({
+        success: true,
+        data: arr
+    })
+});
 
 //路由中间件
 // router.use(function(req, res, next) {
