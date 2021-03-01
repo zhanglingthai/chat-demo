@@ -14,22 +14,49 @@ pool.getConnection((err, conn) => {
                 console.log('------ Mysql select failed ------')
             } else {
                 console.log('------ Mysql select succeed ------')
-                //conn.release(); // 释放该链接，把该链接放回池里供其他人使用
-                conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
+                conn.release(); // 释放该链接，把该链接放回池里供其他人使用
+                //conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
             }
         })
 
     }
 });
 
+// const query = (sql) => {
+//     return new Promise((resolve, reject) => {
+//         if (!sql) {
+//             reject('缺少sql语句')
+//         } else {
+//             pool.getConnection((err, conn) => {
+//                 if (err) {
+//                     reject(err)
+//                 } else {
+//                     conn.query({ sql, timeout: 60000 }, (err, res) => {
+//                         if (err) {
+//                             reject(err)
+//                         } else {
+//                             resolve(res)
+//                             conn.release(); // 释放该链接，把该链接放回池里供其他人使用
+//                             //conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
+//                         }
+//                     })
+
+//                 }
+//             });
+//         }
+//     })
+// }
+
+
+
 // const user = 80000000;
 // pool.query('SELECT * FROM user Where id > ?',[user],(err, results, fields)=>{
-// 	if (err) {
+//     if (err) {
 //         console.log('------ Mysql select failed ------' + err)
-// 	}else{
-// 		console.log(results)
-// 		console.log('------ Mysql select succeed ------');
-// 	}
+//     }else{
+//         console.log(results)
+//         console.log('------ Mysql select succeed ------');
+//     }
 
 // })
 
@@ -62,7 +89,7 @@ pool.getConnection((err, conn) => {
 //                             });
 //                         }
 //                         console.log('success');
-//                         conn.destroy();
+//                         conn.release();
 //                     })
 //                 })
 //             })
@@ -95,4 +122,6 @@ pool.on('release', function(connection) {
 });
 
 
-module.exports = pool
+module.exports = {pool}
+
+

@@ -1,20 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const createError = require('http-errors');
+const router = express.Router();
+const User = require('../models').user;
 
-
-
-
-router.get('/edit', function(req, res, next) {
-    let arr = [];
-    for (let i = 0; i < 100; i++) {
-        arr.push(i)
-    }
-    res.json({
-        success: true,
-        data: arr
-    })
-});
-
-
+router.get('/info', User.info);
+router.post('/info', User.info);
+router.post('/editPwd', User.editPwd);
 
 module.exports = router;

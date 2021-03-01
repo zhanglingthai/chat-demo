@@ -1,15 +1,22 @@
-let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
-// let ejs = require('ejs');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+// const ejs = require('ejs');
+const cors = require("cors");
 
 //import router
-let routers = require('./routes');
-let user = require('./routes/user');
+const routers = require('./routes');
+const user = require('./routes/user');
 
-let app = express();
+const expressJWT = require('express-jwt')
+const util = require('./common/util');
+const secret = require('./conf').secret;
+
+const app = express();
+
+console.log(app.get('env')) //mode
 
 //代理信任的配置
 // app.set('trust proxy', function(ip) {
@@ -23,6 +30,9 @@ let app = express();
 // app.set('view engine', 'html');
 // app.engine('html', ejs.renderFile);
 
+// 处理跨域
+app.use(cors())
+
 //第三方中间件
 app.use(logger('dev'));
 //内置中间件
@@ -30,60 +40,47 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 //第三方中间件
 app.use(cookieParser());
-
 app.use(express.static(path.join(__dirname, 'public')));
 
-//应用层中间件
-// let mid1 = function(req, res, next) {
-//     req.requestTime = Date.now();
-//     console.log('应用层中间件')
-//     next()
-// }
-// app.use(mid1);
-// let mid2 = function(req, res, next) {
-//     req.requestTime = Date.now();
-//     console.log('应用层中间件2,指定路由使用')
-//     next('route') //这里的参数是没用的，必须要app.METHOD里才有作用
-// }
-// let mid3 = function(req, res, next) {
-//     req.requestTime = Date.now();
-//     console.log('应用层中间件3,指定路由直接完成返回')
-//     res.send('完成返回')
-// }
-// app.use('/test2', mid2, mid3)
-// app.use('/test3', mid3)
-// let mid4 = function(req, res, next) {
-//     req.requestTime = Date.now();
-//     console.log('应用层中间件4,指定mothed返回')
 
-//     next('route') //这里可以直接跳过
-// }
-// app.post('/test4', mid4, mid3)
-
-
-
-//跨域
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*')
-    res.header('Access-Control-Allow-Headers', 'Authorization,X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method')
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PATCH, PUT, DELETE')
-    res.header('Allow', 'GET, POST, PATCH, OPTIONS, PUT, DELETE')
-    next();
-});
+// 校验token
+app.use(expressJWT({
+    secret,
+    algorithms: ['HS256'],
+    getToken: req => {
+        const token = req.body.token || req.query.token || req.cookies.token || req.headers.token;
+        if (token) {
+            req.token = token;
+            return token;
+        }
+        return null
+    }
+}).unless({
+    path: ['/login', '/reg', '/checkUser', '/test'] //⽩白名单,除了了这⾥里里写的地址，其他的URL都需要验证
+}));
 
 //route setup
 app.use('/', routers);
 app.use('/user', user);
 
+//catch token wrong
+app.use(function(err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        next(createError(401, 'token无效'));
+    }else{
+        next(err);
+    }
+});
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    next(createError(404, '该地址为空'));
+    next(createError(404, '地址为空'));
 });
 
 // error handler
 
+
 // development模式错误处理
-console.log(app.get('env')) //mode
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         // console.log('错误处理中间件1')
