@@ -39,13 +39,6 @@ const User = {
             return;
         }
 
-        // if (!password || password.length < 8 || password.length > 20) {
-        //     next(createError(500, '密码规则不正确'));
-        //     return;
-        // }
-
-
-
         pool.getConnection((err, conn) => {
             if (err) {
                 next(createError(500, err));
@@ -101,11 +94,6 @@ const User = {
 
         if (!username || username.length < 6 || username.length > 15) {
             next(createError(500, '账号规则不正确'));
-            return;
-        }
-
-        if (!password || password.length < 8 || password.length > 20) {
-            next(createError(500, '密码规则不正确'));
             return;
         }
 
