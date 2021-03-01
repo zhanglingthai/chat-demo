@@ -9,6 +9,7 @@ const cors = require("cors");
 //import router
 const routers = require('./routes');
 const user = require('./routes/user');
+const friend = require('./routes/friend');
 
 const expressJWT = require('express-jwt')
 const util = require('./common/util');
@@ -62,12 +63,13 @@ app.use(expressJWT({
 //route setup
 app.use('/', routers);
 app.use('/user', user);
+app.use('/friend', friend);
 
 //catch token wrong
 app.use(function(err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
         next(createError(401, 'token无效'));
-    }else{
+    } else {
         next(err);
     }
 });

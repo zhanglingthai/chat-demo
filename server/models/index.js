@@ -1,4 +1,4 @@
 let user = require('./user');
-let data = require('./data');
+let friend = require('./friend');
 
-module.exports = { user, data }
+module.exports = { user, friend }

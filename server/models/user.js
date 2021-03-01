@@ -203,6 +203,10 @@ const User = {
             }
         });
 
+    },
+    editInfo(req, res, next) {
+       
+
     }
 
 }
