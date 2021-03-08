@@ -50,7 +50,7 @@ const User = {
                         return;
                     }
 
-                    conn.query('SELECT id FROM user Where username = ?', [username], (err, results, fields) => {
+                    conn.query('SELECT userid FROM user Where username = ?', [username], (err, results, fields) => {
                         if (err) {
                             return conn.rollback(() => {
                                 next(createError(500, err));
@@ -69,19 +69,39 @@ const User = {
                                     next(createError(500, err));
                                 });
                             }
-                            conn.commit(err => {
+                            let userid = results.insertId;
+
+                            conn.query('INSERT INTO userinfo SET ?', { userid }, (err, results, fields) => {
                                 if (err) {
                                     return conn.rollback(() => {
                                         next(createError(500, err));
                                     });
                                 }
-                                //获取token丢出去
-                                const token = util.tokenEncrypt(username);
-                                res.cookie('token', token);
-                                res.cookie('username', username);
-                                res.json({ success: true, msg: '注册成功', token });
-                                conn.release();
+
+                                conn.query('INSERT INTO friends SET ?', { userid }, (err, results, fields) => {
+                                    if (err) {
+                                        return conn.rollback(() => {
+                                            next(createError(500, err));
+                                        });
+                                    }
+                                    conn.commit(err => {
+                                        if (err) {
+                                            return conn.rollback(() => {
+                                                next(createError(500, err));
+                                            });
+                                        }
+
+                                        //获取token丢出去
+                                        const token = util.tokenEncrypt(username);
+                                        res.cookie('token', token);
+                                        res.cookie('uid', userid);
+                                        res.json({ success: true, msg: '注册成功', token });
+                                        conn.release();
+                                    })
+                                })
+
                             })
+
                         })
                     })
                 })
@@ -101,28 +121,46 @@ const User = {
             if (err) {
                 next(createError(500, err));
             } else {
-                conn.query('SELECT password FROM user Where username = ?', [username], (err, results) => {
+                conn.query('SELECT userid,password,status FROM user Where username = ?', [username], (err, results) => {
                     if (err) {
                         next(createError(500, err));
                     } else {
                         if (!results.length) {
                             next(createError(500, '用户名不存在'));
-                        } else {
-                            if (password == util.aesDecrypt(results[0].password)) {
-                                //获取token丢出去
-                                const token = util.tokenEncrypt(username);
-                                res.cookie('token', token);
-                                res.cookie('username', username);
-                                res.json({ success: true, msg: '登陆成功', token });
-                            } else {
-                                next(createError(500, '密码错误'));
-                            }
+                            return;
                         }
+                        if (results[0].status == 0) {
+                            res.clearCookie("token");
+                            res.clearCookie("uid");
+                            next(createError(500, '该账户已冻结，请联系客服'));
+                            return;
+                        } else if (results[0].status == 2) {
+                            res.clearCookie("token");
+                            res.clearCookie("uid");
+                            next(createError(500, '该账户已停用，请联系客服'));
+                            return;
+                        }
+
+                        if (password == util.aesDecrypt(results[0].password)) {
+                            //获取token丢出去
+                            const token = util.tokenEncrypt(username);
+                            res.cookie('token', token);
+                            res.cookie('uid', results[0].userid);
+                            res.json({ success: true, msg: '登陆成功', token });
+                        } else {
+                            next(createError(500, '密码错误'));
+                        }
+
                     }
                     conn.release();
                 })
             }
         });
+    },
+    loginOut(req, res) {
+        res.clearCookie("token");
+        res.clearCookie("uid");
+        res.json({ success: true, msg: '退出成功' });
     },
     info(req, res, next) {
         const username = util.tokenDecrypt(req.token).username;
@@ -202,10 +240,9 @@ const User = {
                 })
             }
         });
-
     },
     editInfo(req, res, next) {
-       
+
 
     }
 

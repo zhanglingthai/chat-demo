@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-// const ejs = require('ejs');
+const ejs = require('ejs');
 const cors = require("cors");
 
 //import router
@@ -27,9 +27,9 @@ console.log(app.get('env')) //mode
 
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'html');
-// app.engine('html', ejs.renderFile);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
+app.engine('html', ejs.renderFile);
 
 // 处理跨域
 app.use(cors())
@@ -57,7 +57,7 @@ app.use(expressJWT({
         return null
     }
 }).unless({
-    path: ['/login', '/reg', '/checkUser', '/test'] //⽩白名单,除了了这⾥里里写的地址，其他的URL都需要验证
+    path: ['/login', '/reg', '/checkUser', '/test','/loginout','/iotest'] //⽩白名单,除了了这⾥里里写的地址，其他的URL都需要验证
 }));
 
 //route setup

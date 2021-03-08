@@ -4,48 +4,23 @@ const pool = mysql.createPool(conf);
 
 
 //需要保证在同连接做一系列操作时用getConnection,query方法会随机使用一条连接
-pool.getConnection((err, conn) => {
-    if (err) {
-        console.log('------ Mysql connection failed ------' + err)
-    } else {
-        console.log('------ Mysql connection succeed ------')
-        conn.query({ sql: 'select * from user', timeout: 60000 }, (err, res) => {
-            if (err) {
-                console.log('------ Mysql select failed ------')
-            } else {
-                console.log('------ Mysql select succeed ------')
-                conn.release(); // 释放该链接，把该链接放回池里供其他人使用
-                //conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
-            }
-        })
+// pool.getConnection((err, conn) => {
+//     if (err) {
+//         console.log('------ Mysql connection failed ------' + err)
+//     } else {
+//         console.log('------ Mysql connection succeed ------')
+//         conn.query({ sql: 'select * from user', timeout: 60000 }, (err, res) => {
+//             if (err) {
+//                 console.log('------ Mysql select failed ------')
+//             } else {
+//                 console.log('------ Mysql select succeed ------')
+//                 conn.release(); // 释放该链接，把该链接放回池里供其他人使用
+//                 //conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
+//             }
+//         })
 
-    }
-});
-
-// const query = (sql) => {
-//     return new Promise((resolve, reject) => {
-//         if (!sql) {
-//             reject('缺少sql语句')
-//         } else {
-//             pool.getConnection((err, conn) => {
-//                 if (err) {
-//                     reject(err)
-//                 } else {
-//                     conn.query({ sql, timeout: 60000 }, (err, res) => {
-//                         if (err) {
-//                             reject(err)
-//                         } else {
-//                             resolve(res)
-//                             conn.release(); // 释放该链接，把该链接放回池里供其他人使用
-//                             //conn.destroy(); // 如果要关闭连接并将其从池中删除，请改用connection.destroy（）。该池将在下次需要时创建一个新的连接。
-//                         }
-//                     })
-
-//                 }
-//             });
-//         }
-//     })
-// }
+//     }
+// });
 
 
 
