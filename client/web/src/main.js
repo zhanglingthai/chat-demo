@@ -4,7 +4,6 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
-
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import axioInterceptor from '@/common/axioInterceptor'
@@ -13,6 +12,10 @@ Vue.use(VueAxios, axios)
 
 import 'normalize.css'
 import '@/assets/css/main.scss'
+
+import '@/common/elementuiImport'
+
+
 
 Vue.config.productionTip = false
 

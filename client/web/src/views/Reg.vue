@@ -1,49 +1,57 @@
 <template>
-    <div class="login">
-        <div class="loginbox">
-            <ul class="login-type">
-                <li :class="{ on: loginType == 1 }" @click="selectLoginType(1)">账号登陆</li>
-                <!-- <li :class="{ on: loginType == 2 }" @click="selectLoginType(2)">扫码登陆</li> -->
+    <div class="reg">
+        <div class="regbox">
+            <ul class="reg-type">
+                <li :class="{ on: regType == 1 }" @click="selectregType(1)">账号注册</li>
+                <!-- <li :class="{ on: regType == 2 }" @click="selectregType(2)">扫码登陆</li> -->
             </ul>
-            <div class="login-type-detail">
-                <template v-if="loginType == 1">
-                    <el-form @keyup.enter.native="submitForm('loginform')" ref="loginform" :model="loginForm" label-width="80px" :rules="rules">
+            <div class="reg-type-detail">
+                <template v-if="regType == 1">
+                    <el-form @keyup.enter.native="submitForm('regform')" ref="regform" :model="regForm" label-width="80px" :rules="rules">
                         <el-form-item label="账号" prop="username">
-                            <el-input :disabled="loading || !finish" v-model="loginForm.username" autocomplete="off"></el-input>
+                            <el-input :disabled="loading || !finish" v-model="regForm.username" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="密码" prop="password">
-                            <el-input :disabled="loading || !finish" type="password" autocomplete="off" v-model="loginForm.password"></el-input>
+                            <el-input :disabled="loading || !finish" type="password" autocomplete="off" v-model="regForm.password"></el-input>
                         </el-form-item>
-                        <el-form-item label="保持登入" prop="keepLogin">
-                            <el-switch v-model="loginForm.keepLogin"></el-switch>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input :disabled="loading || !finish" type="password" autocomplete="off" v-model="regForm.checkPass"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button :loading="loading || !finish" type="primary" @click="submitForm('loginform')">登陆</el-button>
-                            <el-button :disabled="loading || !finish" @click="resetFrom('loginform')">重置</el-button>
-                            <el-button :disabled="loading || !finish" type="success" @click="$router.push('/reg')">去注册</el-button>
+                            <el-button :loading="loading || !finish" type="primary" @click="submitForm('regform')">注册</el-button>
+                            <el-button :disabled="loading || !finish" @click="resetFrom('regform')">重置</el-button>
+                            <el-button :disabled="loading || !finish" type="success" @click="$router.push('/login')">去登录</el-button>
                         </el-form-item>
                     </el-form>
                 </template>
-                <template v-if="loginType == 2">
-                    <img :src="loginEwmSrc" alt="扫码登陆">
+                <template v-if="regType == 2">
                 </template>
             </div>
         </div>
     </div>
 </template>
 <script>
-
 import MD5 from 'md5';
+
+
 export default {
-    name: 'Login',
+    name: 'Reg',
     data() {
+        const checkPsw = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.regForm.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
-            loginType: 1,
-            loginEwmSrc: "",
-            loginForm: {
+            regType: 1,
+            regForm: {
                 username: '',
                 password: '',
-                keepLogin: true
+                checkPass: ''
             },
             rules: {
                 username: [
@@ -53,33 +61,33 @@ export default {
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
                     { min: 6, max: 20, message: '长度在 6 到 15 个字符', trigger: 'blur' }
+                ],
+                checkPass: [
+                    { required: true, message: '请再次输入密码', trigger: 'blur' },
+                    { validator: checkPsw, trigger: 'blur' }
                 ]
             },
             finish: true
         }
     },
     methods: {
-        selectLoginType(type) {
-            this.loginType = type;
-            if (type == 2) {
-                this.getLoginEwm()
-            }
+        selectRegType(type) {
+            this.regType = type;
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     this.finish = false;
-                    this.$http.post('/login', {
-                        username: this.loginForm.username,
-                        password: MD5(this.loginForm.password),
-                        keepLogin: this.loginForm.keepLogin
+                    this.$http.post('/reg', {
+                        username: this.regForm.username,
+                        password: MD5(this.regForm.password)
                     }).then(data => {
                         if (data.success) {
                             this.$message({
                                 message: data.msg,
                                 type: 'success',
                                 onClose: () => {
-                                    this.$router.push('/main/chat');
+                                    this.$router.push('/login');
                                 }
                             })
                         }
@@ -93,10 +101,7 @@ export default {
         },
         resetFrom(formName) {
             this.$refs[formName].resetFields();
-        },
-        getLoginEwm() {
-            this.loginEwmSrc = ""
-        },
+        }
     },
     computed: {
         loading: function() {
@@ -106,7 +111,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.loginbox {
+.regbox {
     border-radius: 5px;
     width: 40%;
     max-width: 430px;
@@ -119,9 +124,9 @@ export default {
     transform: translate(-50%, -50%);
 }
 
-.login-type {
-    display: flex;
+.reg-type {
     color: #777;
+    display: flex;
 
     li {
         display: inline-block;
@@ -141,7 +146,7 @@ export default {
     }
 }
 
-.login-type-detail {
+.reg-type-detail {
     padding: 10px 30px;
 }
 </style>
