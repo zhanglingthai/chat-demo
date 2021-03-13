@@ -110,7 +110,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .regbox {
     border-radius: 5px;
     width: 40%;

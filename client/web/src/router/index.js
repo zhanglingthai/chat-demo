@@ -20,7 +20,6 @@ const routes = [
     },
     {
         path: '/main',
-        name: 'Main',
         component: Main,
         children: [{
             path: 'chat',

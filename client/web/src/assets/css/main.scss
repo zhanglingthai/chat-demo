@@ -150,6 +150,8 @@ a {
 html,
 body {
     height: 100%;
+    min-width: 800px;
+    min-height: 500px;
 }
 
 #app {
@@ -161,4 +163,5 @@ body {
 .router-wrap{
 	height: 100%;
 	width: 100%;
+    position: relative;
 }

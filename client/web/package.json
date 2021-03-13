@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
+    "font-awesome": "^4.7.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "normalize.css": "^8.0.1",

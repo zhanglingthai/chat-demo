@@ -11,6 +11,7 @@ axioInterceptor(axios)
 Vue.use(VueAxios, axios)
 
 import 'normalize.css'
+import 'font-awesome/css/font-awesome.min.css'
 import '@/assets/css/main.scss'
 
 import '@/common/elementuiImport'

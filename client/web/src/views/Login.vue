@@ -105,7 +105,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .loginbox {
     border-radius: 5px;
     width: 40%;
