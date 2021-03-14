@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="file-message">
+        FileMessage
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'FileMessage',
     components: {
 
     },

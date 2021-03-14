@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="sys-message">
+        SysMessage
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'SysMessage',
     components: {
 
     },

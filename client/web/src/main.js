@@ -16,6 +16,9 @@ import '@/assets/css/main.scss'
 
 import '@/common/elementuiImport'
 
+//google弹窗
+import '@/common/notification'
+
 
 
 Vue.config.productionTip = false

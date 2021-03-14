@@ -83,6 +83,7 @@ export default {
                         password: MD5(this.regForm.password)
                     }).then(data => {
                         if (data.success) {
+                            this.$notice('提示','注册成功');
                             this.$message({
                                 message: data.msg,
                                 type: 'success',

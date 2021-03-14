@@ -1,12 +1,12 @@
 <template>
-    <div class="page404">
-        404
+    <div class="inputbox">
+        InputBox
     </div>
 </template>
 <script>
 
 export default {
-    name: 'Page404',
+    name: 'InputBox',
     components: {
 
     },

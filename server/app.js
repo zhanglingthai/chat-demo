@@ -2,7 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
 const ejs = require('ejs');
 const cors = require("cors");
 
@@ -14,10 +13,12 @@ const friend = require('./routes/friend');
 const expressJWT = require('express-jwt')
 const util = require('./common/util');
 const secret = require('./conf').secret;
+const logger = require('./common/logger');
 
 const app = express();
 
-console.log(app.get('env')) //mode
+// console.log(app.get('env')) //mode
+console.log(process.env.NODE_ENV) //mode
 
 //代理信任的配置
 // app.set('trust proxy', function(ip) {
@@ -34,8 +35,20 @@ app.engine('html', ejs.renderFile);
 // 处理跨域
 app.use(cors())
 
-//第三方中间件
-app.use(logger('dev'));
+//日志
+// if (process.env.NODE_ENV === 'development'){
+//   // 开发环境打印日志不保存
+//   app.use(logger.logger('dev'));
+// }else {
+//   // 生产环境
+//   app.use(logger.accessLog);
+//   app.use(logger.accessLogErr);
+// }
+app.use(logger.accessLog);
+app.use(logger.accessLogErr);
+app.use(logger.logger('dev'));
+
+
 //内置中间件
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -85,7 +98,6 @@ app.use(function(req, res, next) {
 // development模式错误处理
 if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
-        // console.log('错误处理中间件1')
         res.locals.message = err.message;
         res.locals.error = err;
 

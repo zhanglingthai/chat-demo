@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="group-message-list">
+        GroupMessageList
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'GroupMessageList',
     components: {
 
     },

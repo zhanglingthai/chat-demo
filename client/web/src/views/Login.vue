@@ -75,6 +75,7 @@ export default {
                         keepLogin: this.loginForm.keepLogin
                     }).then(data => {
                         if (data.success) {
+                            this.$notice('提示','登录成功');
                             this.$message({
                                 message: data.msg,
                                 type: 'success',

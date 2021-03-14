@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="message-list">
+        MessageList
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'MessageList',
     components: {
 
     },

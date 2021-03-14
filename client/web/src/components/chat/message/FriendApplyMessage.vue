@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="friend-apply-message">
+        FriendApplyMessage
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'FriendApplyMessage',
     components: {
 
     },

@@ -77,7 +77,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-
+                    this.$notice('提示','退出成功');
                     this.$message({
                         type: 'success',
                         message: '登出成功!'

@@ -1,12 +1,11 @@
 <template>
-    <div class="page404">
-        404
+    <div class="live-voice-message">
+        LiveVoiceMessage
     </div>
 </template>
 <script>
-
 export default {
-    name: 'Page404',
+    name: 'LiveVoiceMessage',
     components: {
 
     },
