@@ -1,17 +1,22 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Main from '../views/Main.vue'
+
+import Entry from '../views/Entry.vue'
 import Chat from '../views/Chat.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-    { path: '/', redirect: 'main' },
+    { path: '/', redirect: 'entry' },
+    {
+        path: '/entry',
+        name: 'Entry',
+        component: Entry
+    },
     {
         path: '/login',
         name: 'Login',
-        component: Login
+        component: () => import( /* webpackChunkName: "login" */ '../views/Login.vue')
     },
     {
         path: '/reg',
@@ -20,10 +25,10 @@ const routes = [
     },
     {
         path: '/main',
-        component: Main,
+        component: () => import( /* webpackChunkName: "main" */ '../views/Main.vue'),
         children: [{
             path: 'chat',
-            component: Chat
+            component: () => import( /* webpackChunkName: "chat" */ '../views/Chat.vue')
         }, {
             path: 'friends',
             component: () => import( /* webpackChunkName: "friends" */ '../views/Friends.vue')
@@ -35,10 +40,10 @@ const routes = [
             component: () => import( /* webpackChunkName: "setting" */ '../views/Setting.vue')
         }, {
             path: '',
-            component: Chat
+            component: () => import( /* webpackChunkName: "chat" */ '../views/Chat.vue')
         }, {
             path: '*',
-            component: Chat
+            component: () => import( /* webpackChunkName: "chat" */ '../views/Chat.vue')
         }]
     },
     {

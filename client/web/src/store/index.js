@@ -1,11 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import loading from './modules/loading'
+import user from './modules/user'
+import friends from './modules/friends'
+import msgs from './modules/msgs'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        loading
+        loading,
+        user,
+        friends,
+        msgs
     }
 })

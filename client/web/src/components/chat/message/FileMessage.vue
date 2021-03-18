@@ -4,6 +4,7 @@
     </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
     name: 'FileMessage',
     components: {
@@ -17,11 +18,9 @@ export default {
     methods: {
 
     },
-    computed: {
-        loading: function() {
-            return this.$store.state.loading.loading
-        }
-    }
+    computed: mapState({
+        loading: state => state.loading.loading
+    })
 }
 </script>
 <style lang="scss" scoped>

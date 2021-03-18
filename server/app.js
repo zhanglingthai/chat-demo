@@ -70,7 +70,7 @@ app.use(expressJWT({
         return null
     }
 }).unless({
-    path: ['/login', '/reg', '/checkUser', '/test', '/loginout', '/iotest', '/web'] //⽩白名单,除了了这⾥里里写的地址，其他的URL都需要验证
+    path: ['/login', '/reg', '/checkUsername', '/loginout', '/web'] //⽩白名单,除了了这⾥里里写的地址，其他的URL都需要验证
 }));
 
 //route setup

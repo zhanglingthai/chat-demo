@@ -21,10 +21,8 @@ module.exports = {
         let decrypted = bytes.toString(cryptoJS.enc.Utf8);
         return decrypted;
     },
-    tokenEncrypt(username, delay) {
-        let token = jwt.sign({
-            username
-        }, secret, {
+    tokenEncrypt(info, delay) {
+        let token = jwt.sign(info, secret, {
             expiresIn: delay || '30d'
         })
         return token;

@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue from 'vue'
 
 Vue.prototype.$notice = (title, content, iconurl) => {
     Notification.requestPermission().then(function(permission) {
@@ -6,11 +6,11 @@ Vue.prototype.$notice = (title, content, iconurl) => {
             var mynotification = new Notification(title, {
                 body: content,
                 icon: iconurl
-            });
+            })
             mynotification.onclick = function() {
                 alert(content)
-                mynotification.close();
+                mynotification.close()
             }
         }
-    });
-};
+    })
+}

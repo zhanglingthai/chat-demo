@@ -34,6 +34,7 @@
 <script>
 
 import MD5 from 'md5';
+import { mapState } from 'vuex'
 export default {
     name: 'Login',
     data() {
@@ -60,7 +61,7 @@ export default {
     },
     methods: {
         selectLoginType(type) {
-            this.loginType = type;
+            this.loginType = type
             if (type == 2) {
                 this.getLoginEwm()
             }
@@ -68,42 +69,40 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    this.finish = false;
+                    this.finish = false
                     this.$http.post('/login', {
                         username: this.loginForm.username,
                         password: MD5(this.loginForm.password),
                         keepLogin: this.loginForm.keepLogin
                     }).then(data => {
                         if (data.success) {
-                            this.$notice('提示','登录成功');
+                            this.$notice('提示','登录成功')
                             this.$message({
                                 message: data.msg,
                                 type: 'success',
                                 onClose: () => {
-                                    this.$router.push('/main/chat');
+                                    this.$router.push('/main/chat')
                                 }
                             })
                         }
                     }).catch(err => {
-                        this.finish = true;
+                        this.finish = true
                     })
                 } else {
-                    return false;
+                    return false
                 }
             });
         },
         resetFrom(formName) {
-            this.$refs[formName].resetFields();
+            this.$refs[formName].resetFields()
         },
         getLoginEwm() {
             this.loginEwmSrc = ""
         },
     },
-    computed: {
-        loading: function() {
-            return this.$store.state.loading.loading
-        }
-    }
+    computed: mapState({
+        loading: state => state.loading.loading
+    })
 }
 </script>
 <style lang="scss" scoped>

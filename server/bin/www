@@ -27,7 +27,15 @@ var server = http.createServer(app);
  * Create WS server.
  */
 
-var io = socketIO(server, { path: "/chat" });
+var io = socketIO(server, {
+    path: "/chat",
+    cors: {
+        origin: "*",
+        // methods: ["GET", "POST"],
+        // allowedHeaders: ["my-custom-header"],
+        // credentials: true
+    }
+});
 IoFunc(io);
 
 /**

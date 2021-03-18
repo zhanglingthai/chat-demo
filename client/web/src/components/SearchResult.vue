@@ -1,11 +1,12 @@
 <template>
-    <div class="notice-list">
-        NoticeList
+    <div class="search-result">
+        SearchResult
     </div>
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
-    name: 'NoticeList',
+    name: 'SearchResult',
     components: {
 
     },
@@ -17,11 +18,9 @@ export default {
     methods: {
 
     },
-    computed: {
-        loading: function() {
-            return this.$store.state.loading.loading
-        }
-    }
+    computed: mapState({
+        loading: state => state.loading.loading
+    })
 }
 </script>
 <style lang="scss" scoped>

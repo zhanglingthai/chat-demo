@@ -34,18 +34,15 @@
                     </ul>
                 </div>
             </div>
-            <div>
-                <router-view />
-            </div>
+            <router-view class="detail-router-wrap" />
         </div>
     </div>
 </template>
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
+import io from 'socket.io-client'
 export default {
     name: 'Main',
-    components: {
-
-    },
     data() {
         return {
             showStatus: false,
@@ -55,7 +52,18 @@ export default {
             nowPage: 0
         }
     },
+    created() {
+        this.$http.get('/user/info', { closeAlert: true }).then(({ data, token }) => {
+            this.set_user_info(data)
+            this.set_user_token(token)
+            this.wsControl()
+        }).catch(err => {
+            console.log(err)
+            this.$router.push('/login')
+        })
+    },
     methods: {
+        ...mapMutations(['set_user_token', 'set_user_info']),
         search() {
             console.log(this.searchValue)
         },
@@ -63,13 +71,13 @@ export default {
             this.searchFocus = !this.searchFocus;
         },
         setNowPage(num) {
-            this.nowPage = num;
+            this.nowPage = num
         },
         toggleShowStatus() {
             this.showStatus = !this.showStatus
         },
         changeStaus(status) {
-            this.showStatus = false;
+            this.showStatus = false
             if (status == 4) {
                 //登出操作
                 this.$confirm('是否确认登出?', '提示', {
@@ -77,32 +85,71 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$notice('提示','退出成功');
+                    this.$notice('提示', '退出成功')
                     this.$message({
                         type: 'success',
                         message: '登出成功!'
-                    });
-                    this.$router.push('/login');
-                    this.status = status;
+                    })
+                    this.$router.push('/login')
+                    this.status = status
                 }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '已取消'
-                    });
-                });
+                    })
+                })
             } else {
-                this.status = status;
+                this.status = status
             }
         },
         setAvatar() {
             this.$alert('not yet');
-        }
+        },
+        wsControl() {
+            const socket = io("ws://localhost:3000", {
+                path: "/chat/",
+                auth: {
+                    token: this.token
+                }
+            });
+
+            socket.on("connect", () => {
+                console.log('客户端发起连接')
+            })
+
+            socket.on("connected", ({ connectedMsg }) => {
+                console.log(connectedMsg)
+            })
+
+            socket.on("msglist", ({ msgs }) => {
+                this.setFriendMsgs(msgs)
+            })
+
+            socket.on("message", ({ msg }) => {
+                this.addNewMsg(msg)
+            })
+
+            socket.on("syslist", ({ msgs }) => {
+                this.setSysMsgs(msgs)
+            })
+
+            socket.on("sysmessage", ({ msg }) => {
+                this.addNewSysMsg(msg)
+            })
+
+            socket.on("disconnect", () => {
+                console.log('连接断开')
+            })
+        },
+        ...mapActions([
+            'setFriendMsgs', 'setSysMsgs', 'addNewMsg', 'addNewSysMsg'
+        ]),
     },
-    computed: {
-        loading: function() {
-            return this.$store.state.loading.loading
-        }
-    }
+    computed: mapState({
+        info: state => state.user.info,
+        token: state => state.user.token,
+        loading: state => state.loading.loading
+    })
 }
 </script>
 <style lang="scss" scoped>
@@ -123,6 +170,8 @@ export default {
 }
 
 .header {
+    z-index: 2;
+    position: relative;
     background-color: #eee;
     display: flex;
     line-height: 50px;
@@ -257,5 +306,13 @@ export default {
             }
         }
     }
+}
+
+.detail-router-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 70px;
 }
 </style>

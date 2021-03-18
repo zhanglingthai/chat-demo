@@ -32,7 +32,7 @@
 </template>
 <script>
 import MD5 from 'md5';
-
+import { mapState } from 'vuex'
 
 export default {
     name: 'Reg',
@@ -104,11 +104,9 @@ export default {
             this.$refs[formName].resetFields();
         }
     },
-    computed: {
-        loading: function() {
-            return this.$store.state.loading.loading
-        }
-    }
+    computed: mapState({
+        loading: state => state.loading.loading
+    })
 }
 </script>
 <style lang="scss" scoped>
