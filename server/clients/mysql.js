@@ -1,6 +1,6 @@
 const mysql = require('mysql');
-const conf = require('../conf').mysql;
-const pool = mysql.createPool(conf);
+const { MYSQL_CONF } = require('../conf').mysql;
+const pool = mysql.createPool(MYSQL_CONF);
 
 
 //需要保证在同连接做一系列操作时用getConnection,query方法会随机使用一条连接
@@ -73,7 +73,26 @@ const pool = mysql.createPool(conf);
 // });
 
 
+let exec = (sql) => {
+    const promise = new Promise((resolve, reject) => {
+        pool.getConnection((err, conn) => {
+            if (err) {
+                reject(err);
+            } else {
+                conn.query({ sql, timeout: 60000 }, (err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res);
+                        conn.release();
+                    }
+                })
 
+            }
+        });
+    })
+    return promise;
+}
 
 
 //获取连接
@@ -97,6 +116,4 @@ pool.on('release', function(connection) {
 });
 
 
-module.exports = {pool}
-
-
+module.exports = { pool, exec }

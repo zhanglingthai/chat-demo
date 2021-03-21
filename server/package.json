@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production node ./bin/www",
-    "dev": "DEBUG=http,express:* NODE_ENV=development node ./bin/www"
+    "start": "cross-env NODE_ENV=production nodemon ./bin/www",
+    "dev": "cross-env DEBUG=http,express:* NODE_ENV=development nodemon ./bin/www"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -20,7 +20,10 @@
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
     "redis": "^3.0.2",
-    "socket.io": "^3.1.2",
-    "socket.io-client": "^3.1.2"
+    "socket.io": "^3.1.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.7"
   }
 }

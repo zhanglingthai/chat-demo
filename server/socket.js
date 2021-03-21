@@ -1,10 +1,16 @@
 const util = require('./common/util');
-const msgs = require('./models/msg');
+const msgs = require('./controller/msg');
 
 const wsApp = (io) => {
     io.on('connection', client => {
-        const userToken = client.handshake.auth.token,
-            userObj = util.tokenDecrypt(userToken),
+        const userToken = client.handshake.auth.token;
+        if (!userToken) {
+            client.emit("connected", {
+                connectedMsg: ` 获取token失败,连接失败`
+            });
+            return
+        }
+        const userObj = util.tokenDecrypt(userToken),
             userid = userObj.userid,
             username = userObj.username;
 
@@ -16,14 +22,14 @@ const wsApp = (io) => {
         //好友信息
         msgs.getMsgByUserid(userid, 200).then(msgList => {
             client.emit("msglist", {
-                msgs:msgList
+                msgs: msgList
             });
         })
 
         //系统信息
         msgs.getSYSMsg(userid, 20).then(sysList => {
             client.emit("syslist", {
-                msgs:sysList
+                msgs: sysList
             });
         })
 
