@@ -1,7 +1,7 @@
 const state = {
-    list: '',
-    blackList: '',
-    blockList: ''
+    list: [],
+    blackList: [],
+    blockList: []
 }
 
 const mutations = {
@@ -17,19 +17,48 @@ const mutations = {
 }
 
 const actions = {
-    setList({ commit }, listStr) {
-        commit("set_list", listStr)
-    },
-    setBlackList({ commit }, listStr) {
-        commit("set_black_list", listStr)
-    },
-    setBlockList({ commit }, listStr) {
-        commit("set_block_list", listStr)
+    addMsgToFriend({ state, rootState, commit }, msgs) {
+
+        if (Array.isArray(msgs)) {
+            for (let key in msgs) {
+                let msg = msgs[key]
+                pushMsg(msg)
+            }
+        } else {
+            pushMsg(msgs)
+        }
+
+        function pushMsg(msg) {
+            let pushUserid,
+                selfUserid = rootState.user.userid,
+                friendList = state.list
+
+            msg.from_uid != selfUserid && (pushUserid = msg.from_uid)
+            msg.to_uid != selfUserid && (pushUserid = msg.to_uid)
+
+            for (let key in friendList) {
+                let friend = friendList[key]
+                if (friend.userid == pushUserid) {
+                    !friend.msg && (friend.msg = []);
+                    friend.msg.push(msg)
+                    let targetFriend = friendList.splice(key,1)[0]
+                    friendList.unshift(targetFriend)
+                    break
+                }
+            }
+
+            commit("set_list", friendList)
+        }
+
+
     }
 }
 
 const getters = {
     friendList: state => {
+        return state.list
+    },
+    friendListSortByLetter: state => {
         return state.list
     },
     friendBlackList: state => {

@@ -52,5 +52,6 @@ export default {
 }
 .right{
     flex: 8;
+    position: relative;
 }
 </style>

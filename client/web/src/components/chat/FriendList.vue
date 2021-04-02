@@ -1,43 +1,32 @@
 <template>
     <div class="friend-list">
         <div class="scroll-wrap">
-            <div class="friend-item" v-for="(friend,index) in friendList" :key="index">
-                <div class="avatar">
-                    <img src="../../assets/imgs/avatars/default.png" alt="avatar">
+            <template v-for="(friend,index) in friendList">
+                <div class="friend-item" :key="index" v-if="friend.msg">
+                    <div class="avatar">
+                        <img src="../../assets/imgs/avatars/default.png" alt="avatar">
+                    </div>
+                    <div class="info">
+                        <div style="position: relative;"><span class="name">{{friend.nickname || friend.userid}}</span><span class="lastmsgtime">{{friend.msg[friend.msg.length -1].create_time | formatTime}}</span></div>
+                        <p class="lastmsg">{{friend.msg[friend.msg.length -1].detail}}</p>
+                    </div>
                 </div>
-                <div class="info">
-                    <div style="position: relative;"><span class="name">{{friend.nickname || friend.userid}}</span><span class="lastmsgtime">{{friend.lastmsgtime}}</span></div>
-                    <p class="lastmsg">{{friend.lastmsg}}</p>
-                </div>
-            </div>
+            </template>
         </div>
     </div>
 </template>
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import moment from 'moment'
 export default {
     name: 'FriendList',
-    components: {
-
-    },
     data() {
         return {
-            nowShowFriendType: 0
+
         }
     },
-    mounted() {
-        this.$http.get('/friend/list', { closeAlert: true }).then(({ data }) => {
-            this.set_list(data.friendList.list)
-            this.set_black_list(data.friendList.black_list)
-            this.set_block_list(data.friendList.block_list)
-        })
-    },
     methods: {
-        ...mapMutations([
-            'set_list',
-            'set_black_list',
-            'set_block_list'
-        ])
+
     },
     computed: {
         ...mapState({
@@ -48,6 +37,31 @@ export default {
             'friendBlackList',
             'friendBlockList'
         ])
+    },
+    filters: {
+        formatTime(value) {
+            let dateObj = moment(value),
+                timeStr;
+
+            var REFERENCE = moment(new Date);
+            var TODAY = REFERENCE.clone().startOf('day');
+            var YESTERDAY = REFERENCE.clone().subtract(1, 'days').startOf('day');
+            var A_WEEK_OLD = REFERENCE.clone().subtract(7, 'days').startOf('day');
+
+            if (dateObj.isSame(TODAY, 'd')) {
+                timeStr = dateObj.format('HH:mm')
+            } else if (dateObj.isSame(YESTERDAY, 'd')) {
+                timeStr = '昨天'
+            } else if (dateObj.isAfter(A_WEEK_OLD)) {
+                timeStr = '本周'
+            } else if (REFERENCE.year() != dateObj.year()) {
+                timeStr = dateObj.format('Y-MM-DD')
+            } else {
+                timeStr = dateObj.format('MM-DD')
+            }
+            
+            return timeStr
+        }
     }
 }
 </script>
@@ -62,12 +76,13 @@ export default {
 }
 
 .friend-item {
+
+    &.on,
     &:hover {
         background: #eee;
     }
 
     display: flex;
-
     padding: 10px 15px;
     line-height: 20px;
     cursor: pointer;

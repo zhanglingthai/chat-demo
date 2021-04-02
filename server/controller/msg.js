@@ -1,45 +1,17 @@
-const pool = require('../clients/mysql').pool;
+const { pool, exec } = require('../clients/mysql');
 const createError = require('http-errors');
 const util = require('../common/util');
 
 const Msg = {
     //获取userid相关的聊天记录
     getMsgByUserid(userid, nums) {
-        return new Promise((resolve, reject) => {
-            pool.getConnection((err, conn) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    conn.query(`SELECT * FROM msgs WHERE from_uid = ? OR to_uid = ?`, [userid,userid], (err, results) => {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve(results)
-                        }
-                        conn.release();
-                    })
-                }
-            });
-        })
+        let sql = `SELECT * FROM msgs WHERE from_uid = ${userid} OR to_uid = ${userid} AND status = 1 `;
+        return exec(sql);
     },
     //获取userid相关的聊天记录
     getSYSMsg(userid, nums) {
-        return new Promise((resolve, reject) => {
-            pool.getConnection((err, conn) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    conn.query(`SELECT title,detail,update_time FROM sysmsgs WHERE status = 1`, (err, results) => {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve(results)
-                        }
-                        conn.release();
-                    })
-                }
-            });
-        })
+        let sql = `SELECT * FROM sysmsgs WHERE status = 1 `;
+        return exec(sql);
     }
 }
 

@@ -15,19 +15,18 @@ const Friend = {
                         } else {
                             if (results.length) {
 
-                                Promise.all([Friend.info(results[0].list), Friend.info(results[0].black_list), Friend.info(results[0].block_list), msg.getSYSMsg()]).then(values => {
+                                Promise.all([Friend.info(results[0].list), Friend.info(results[0].black_list), Friend.info(results[0].block_list)]).then(values => {
                                         let friendList = {
                                             list: values[0],
                                             black_list: values[1],
                                             block_list: values[2]
                                         }
-                                        let sysMsgList = values[3];
 
-                                        resolve({ friendList, sysMsgList })
+                                        resolve({ friendList })
 
                                     })
                                     .catch(err => {
-                                        next(createError(500, err));
+                                        reject(err)
                                     })
 
 
@@ -40,13 +39,10 @@ const Friend = {
                 }
             });
         })
-
-
     },
     //批量或单个查询用户详情
     info(listArr) {
         let sql = `SELECT * FROM userinfo WHERE userid IN (${listArr});`;
-        console.log(sql)
         return exec(sql);
     }
 }

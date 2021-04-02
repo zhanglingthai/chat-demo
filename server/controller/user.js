@@ -81,7 +81,7 @@ const User = {
         return exec(sql);
     },
     info({ userid }) {
-        let sql = `SELECT nickname,avatar_num,avatar_url,back_url,account,address,sign,city,birth,create_time FROM userinfo Where userid = "${userid}" `;
+        let sql = `SELECT userid,nickname,avatar_num,avatar_url,back_url,account,address,sign,city,birth,create_time FROM userinfo Where userid = "${userid}" `;
         return exec(sql);
     },
     editPwd({ username, oldPwd, newPwd }) {

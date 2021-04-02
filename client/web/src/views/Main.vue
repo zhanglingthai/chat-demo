@@ -39,8 +39,8 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
-import io from 'socket.io-client'
+import { mapState, mapMutations } from 'vuex'
+import chatService from '@/service/modules/chat'
 export default {
     name: 'Main',
     data() {
@@ -53,17 +53,37 @@ export default {
         }
     },
     created() {
+
+    },
+    mounted() {
         this.$http.get('/user/info', { closeAlert: true }).then(({ data, token }) => {
             this.set_user_info(data)
+            this.set_user_userid(data.userid)
             this.set_user_token(token)
-            this.wsControl()
+            this.getFriendList().then(() => {
+                chatService.init()
+            })
         }).catch(err => {
             console.log(err)
             this.$router.push('/login')
         })
     },
     methods: {
-        ...mapMutations(['set_user_token', 'set_user_info']),
+        ...mapMutations([
+            'set_user_token',
+            'set_user_info',
+            'set_user_userid',
+            'set_list',
+            'set_black_list',
+            'set_block_list'
+        ]),
+        getFriendList() {
+            return this.$http.get('/friend/list', { closeAlert: true }).then(({ data }) => {
+                this.set_list(data.friendList.list)
+                this.set_black_list(data.friendList.black_list)
+                this.set_block_list(data.friendList.block_list)
+            })
+        },
         search() {
             console.log(this.searchValue)
         },
@@ -104,50 +124,9 @@ export default {
         },
         setAvatar() {
             this.$alert('not yet');
-        },
-        wsControl() {
-            const socket = io("ws://localhost:3000", {
-                path: "/chat/",
-                auth: {
-                    token: this.token
-                }
-            });
-
-            socket.on("connect", () => {
-                console.log('客户端发起连接')
-            })
-
-            socket.on("connected", ({ connectedMsg }) => {
-                console.log(connectedMsg)
-            })
-
-            socket.on("msglist", ({ msgs }) => {
-                this.setFriendMsgs(msgs)
-            })
-
-            socket.on("message", ({ msg }) => {
-                this.addNewMsg(msg)
-            })
-
-            socket.on("syslist", ({ msgs }) => {
-                this.setSysMsgs(msgs)
-            })
-
-            socket.on("sysmessage", ({ msg }) => {
-                this.addNewSysMsg(msg)
-            })
-
-            socket.on("disconnect", () => {
-                console.log('连接断开')
-            })
-        },
-        ...mapActions([
-            'setFriendMsgs', 'setSysMsgs', 'addNewMsg', 'addNewSysMsg'
-        ]),
+        }
     },
     computed: mapState({
-        info: state => state.user.info,
-        token: state => state.user.token,
         loading: state => state.loading.loading
     })
 }
@@ -172,7 +151,7 @@ export default {
 .header {
     z-index: 2;
     position: relative;
-    background-color: #eee;
+    background-color: #ddd;
     display: flex;
     line-height: 50px;
     padding: 10px 0;

@@ -1,6 +1,6 @@
 <template>
     <div class="entry">
-        Entry
+        
     </div>
 </template>
 <script>

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../controller').user;
 const util = require('../common/util');
-const moment = require('moment');
+// const moment = require('moment');
 const createError = require('http-errors');
 
 router.get('/info', (req, res, next) => {
@@ -10,7 +10,7 @@ router.get('/info', (req, res, next) => {
 
     const getResult = User.info({ userid });
     getResult.then(result => {
-            result[0].create_time = moment(result[0].create_time).format('Y-MM-DD HH:mm:ss');
+            // result[0].create_time = moment(result[0].create_time).format('Y-MM-DD HH:mm:ss');
             res.json({ success: true, data: result[0], msg: '获取成功', token: req.token });
         })
         .catch(err => {

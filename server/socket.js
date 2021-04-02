@@ -33,19 +33,11 @@ const wsApp = (io) => {
             });
         })
 
-        // setTimeout(() => {
-        //     client.emit("message", {
-        //         msg: {detail:'newmessage'}
-        //     });
-        //     client.emit("sysmessage", {
-        //         msg: {detail:'newsysmessage'}
-        //     });
-        // }, 5000)
-
-
 
         //用户发信息
         client.on("message", (arg, cb) => {
+            const toUid = arg.toUid,
+                msg = arg.msg;
             console.log(arg);
             //先判断是否双方在对方好友列表
             //如果都在好友列表且双方状态正常
