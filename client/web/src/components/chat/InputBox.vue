@@ -25,12 +25,12 @@ export default {
         }
     },
     methods: {
-        submitForm(formName) {
+        submitForm() {
             chatService.sendMsg(this.textContent, this.toUid)
             this.textContent = ''
         },
         keyborderCtrl(e) {
-            if (e.keyCode == 13 && e.ctrlKey || e.keyCode == 13 && e.metaKey) {
+            if (e.keyCode == 13 && e.ctrlKey || e.keyCode == 13 && e.metaKey || e.keyCode == 13 && e.shiftKey ) {
                 this.textContent = this.textContent + '\n'
             } else if (e.keyCode === 13) {
                 this.submitForm()

@@ -36,21 +36,28 @@ const wsApp = (io) => {
 
         //用户发信息
         client.on("message", (arg, cb) => {
-            const toUid = arg.toUid,
-                msg = arg.msg;
-            console.log(arg);
+
+            arg.fromUid = userid;
+            arg.toUid = arg.toUid;
             //先判断是否双方在对方好友列表
             //如果都在好友列表且双方状态正常
             //toMsg 去发消息给对方并记录数据库
+            console.log(arg)
+            toMsg(arg)
 
             if (cb) { cb('ok'); }
         });
 
         //发消息给某人
         function toMsg(arg) {
-            // client.emit("message", {
-            //     msg: 'hello world'
-            // });
+            if (arg.toUid == userid) {
+                client.emit("message", {
+                    fromUid: arg.fromUid,
+                    msg: arg.msg
+                });
+
+            }
+
         }
 
         //arg

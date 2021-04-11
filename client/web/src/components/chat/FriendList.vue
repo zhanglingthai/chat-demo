@@ -1,16 +1,22 @@
 <template>
     <div class="friend-list">
         <div class="scroll-wrap">
-            <template v-for="(friend,index) in friendList">
-                <div class="friend-item" :key="index" v-if="friend.msg">
-                    <div class="avatar">
-                        <img src="../../assets/imgs/avatars/default.png" alt="avatar">
-                    </div>
-                    <div class="info">
-                        <div style="position: relative;"><span class="name">{{friend.nickname || friend.userid}}</span><span class="lastmsgtime">{{friend.msg[friend.msg.length -1].create_time | formatTime}}</span></div>
-                        <p class="lastmsg">{{friend.msg[friend.msg.length -1].detail}}</p>
-                    </div>
-                </div>
+            <template v-if="!friendInited">加载中..</template>
+            <template v-else>
+                <template v-if="friendList.length">
+                    <template v-for="(friend,index) in friendList">
+                        <div class="friend-item" :key="index" v-if="friend.msg">
+                            <div class="avatar">
+                                <img src="../../assets/imgs/avatars/default.png" alt="avatar">
+                            </div>
+                            <div class="info">
+                                <div style="position: relative;"><span class="name">{{friend.nickname || friend.userid}}</span><span class="lastmsgtime">{{friend.msg[friend.msg.length -1].create_time | formatTime}}</span></div>
+                                <p class="lastmsg">{{friend.msg[friend.msg.length -1].detail}}</p>
+                            </div>
+                        </div>
+                    </template>
+                </template>
+                <div v-else class="empty">暂无好友</div>
             </template>
         </div>
     </div>
@@ -35,7 +41,8 @@ export default {
         ...mapGetters([
             'friendList',
             'friendBlackList',
-            'friendBlockList'
+            'friendBlockList',
+            'friendInited'
         ])
     },
     filters: {
@@ -59,7 +66,7 @@ export default {
             } else {
                 timeStr = dateObj.format('MM-DD')
             }
-            
+
             return timeStr
         }
     }
@@ -73,6 +80,12 @@ export default {
 
 .scroll-wrap {
     padding: 0px 0 10px 0;
+}
+
+.empty{
+    line-height: 100px;
+    text-align: center;
+    color: #666;
 }
 
 .friend-item {

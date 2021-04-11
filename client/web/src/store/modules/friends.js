@@ -1,4 +1,5 @@
 const state = {
+    inited: false,
     list: [],
     blackList: [],
     blockList: []
@@ -13,6 +14,9 @@ const mutations = {
     },
     set_block_list(state, list) {
         state.blockList = list
+    },
+    set_friend_inited(state) {
+        state.inited = true
     }
 }
 
@@ -41,7 +45,7 @@ const actions = {
                 if (friend.userid == pushUserid) {
                     !friend.msg && (friend.msg = []);
                     friend.msg.push(msg)
-                    let targetFriend = friendList.splice(key,1)[0]
+                    let targetFriend = friendList.splice(key, 1)[0]
                     friendList.unshift(targetFriend)
                     break
                 }
@@ -66,6 +70,9 @@ const getters = {
     },
     friendBlockList: state => {
         return state.blockList
+    },
+    friendInited: state => {
+        return state.inited
     }
 }
 

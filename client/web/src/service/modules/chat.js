@@ -23,7 +23,8 @@ export default {
             Store.dispatch("setFriendMsgs", msgs)
         })
 
-        socket.on("message", ({ msg }) => {
+        socket.on("message", msg => {
+            console.log(msg)
             Store.dispatch("addNewMsg", msg)
         })
 
@@ -40,15 +41,15 @@ export default {
         })
     },
     sendMsg(msg, toUid) {
-        return new Promise((reslove,reject) =>{
-            this.socket.emit('message', { msg, toUid },(req) =>{
-                if(req == 'ok'){
+        return new Promise((reslove, reject) => {
+            this.socket.emit('message', { msg, toUid }, (req) => {
+                if (req == 'ok') {
                     reslove()
-                }else{
+                } else {
                     reject()
                 }
             })
         })
-        
+
     }
 }

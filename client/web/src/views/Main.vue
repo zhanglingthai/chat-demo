@@ -75,13 +75,15 @@ export default {
             'set_user_userid',
             'set_list',
             'set_black_list',
-            'set_block_list'
+            'set_block_list',
+            'set_friend_inited'
         ]),
         getFriendList() {
             return this.$http.get('/friend/list', { closeAlert: true }).then(({ data }) => {
                 this.set_list(data.friendList.list)
                 this.set_black_list(data.friendList.black_list)
                 this.set_block_list(data.friendList.block_list)
+                this.set_friend_inited()
             })
         },
         search() {
