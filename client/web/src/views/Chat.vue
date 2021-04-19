@@ -5,8 +5,15 @@
                 <FriendList />
             </div>
             <div class="right">
-                <MessageList />
-                <InputBox />
+                <template v-if="nowToUser.userid">
+                    <div class="chat">
+                        <MessageList />
+                        <InputBox />
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="default"><img src="@/assets/imgs/chat/chat_default_bak.png"></div>
+                </template>
             </div>
         </div>
     </div>
@@ -33,25 +40,40 @@ export default {
 
     },
     computed: mapState({
-        info: state => state.user.info,
-        loading: state => state.loading.loading
+        loading: state => state.loading.loading,
+        nowToUser: state => state.chat.nowToUser
     })
 
 }
 </script>
 <style lang="scss" scoped>
-.chat-wrap{
+.chat-wrap {
     display: flex;
     height: 100%;
-    
+
 }
-.left{
+
+.left {
     flex: 3;
     border-right: 1px solid #ccc;
     min-width: 250px;
 }
-.right{
+
+.right {
     flex: 8;
     position: relative;
+}
+
+.default {
+    position: relative;
+    height: 100%;
+
+    img {
+        width: 70%;
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        transform: translate(-50%, -50%)
+    }
 }
 </style>

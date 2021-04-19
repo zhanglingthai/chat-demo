@@ -5,7 +5,7 @@
             <template v-else>
                 <template v-if="friendList.length">
                     <template v-for="(friend,index) in friendList">
-                        <div class="friend-item" :key="index" v-if="friend.msg">
+                        <div @click="set_to_user(friend)" :class="{on:friend.userid == nowToUserid}" class="friend-item" :key="index" v-if="friend.msg">
                             <div class="avatar">
                                 <img src="../../assets/imgs/avatars/default.png" alt="avatar">
                             </div>
@@ -32,7 +32,10 @@ export default {
         }
     },
     methods: {
-
+        ...mapMutations([
+            'set_to_user',
+            'clean_to_user'
+        ])
     },
     computed: {
         ...mapState({
@@ -42,7 +45,8 @@ export default {
             'friendList',
             'friendBlackList',
             'friendBlockList',
-            'friendInited'
+            'friendInited',
+            'nowToUserid'
         ])
     },
     filters: {
@@ -82,7 +86,7 @@ export default {
     padding: 0px 0 10px 0;
 }
 
-.empty{
+.empty {
     line-height: 100px;
     text-align: center;
     color: #666;
